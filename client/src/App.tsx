@@ -20,6 +20,7 @@ import Contracts from "@/pages/Contracts";
 import CreateContract from "@/pages/CreateContract";
 import Payments from "@/pages/Payments";
 import PaymentStatus from "@/pages/PaymentStatus";
+import Checkout from "@/pages/Checkout";
 import Search from "@/pages/Search";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";

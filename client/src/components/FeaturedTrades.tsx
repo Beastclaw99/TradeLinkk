@@ -64,7 +64,7 @@ const FeaturedTrades = () => {
                 <div 
                   className="h-32 bg-cover bg-center" 
                   style={{ 
-                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${tradeBackgrounds[trade.value] || STOCK_IMAGES.tradesmen[5]}?auto=format&fit=crop&w=600&q=80)`
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${tradeBackgrounds[trade.value] || STOCK_IMAGES.tradeCarpentry}?auto=format&fit=crop&w=600&q=80)`
                   }}
                 >
                   <div className="h-full w-full flex items-center justify-center text-white">
