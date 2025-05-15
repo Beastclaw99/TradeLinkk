@@ -9,7 +9,7 @@ interface ProfileCompletenessProps {
   className?: string;
 }
 
-export function ProfileCompleteness({ score, profile, className = "" }: ProfileCompletenessProps) {
+export default function ProfileCompleteness({ score, profile, className = "" }: ProfileCompletenessProps) {
   const [progress, setProgress] = useState(0);
   
   // Animate progress on mount

@@ -50,6 +50,26 @@ export const STOCK_IMAGES = {
   tradeRoofing: "https://images.unsplash.com/photo-1607537698449-e82b5f29d333?q=80&w=2000&auto=format&fit=crop",
   tradeLandscaping: "https://images.unsplash.com/photo-1600698479098-5c93bbc05673?q=80&w=2000&auto=format&fit=crop",
   defaultUser: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=387&auto=format&fit=crop",
+  
+  // Organized by category for component use
+  tradesmen: [
+    "https://images.unsplash.com/photo-1594818379496-da1e345b0ded?q=80&w=2000&auto=format&fit=crop", // carpentry
+    "https://images.unsplash.com/photo-1621905251918-48416bd8575a?q=80&w=2000&auto=format&fit=crop", // electrical
+    "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?q=80&w=2000&auto=format&fit=crop", // plumbing
+    "https://images.unsplash.com/photo-1562259949-e8e7689d7828?q=80&w=2000&auto=format&fit=crop", // painting
+    "https://images.unsplash.com/photo-1607537698449-e82b5f29d333?q=80&w=2000&auto=format&fit=crop", // roofing
+    "https://images.unsplash.com/photo-1600698479098-5c93bbc05673?q=80&w=2000&auto=format&fit=crop"  // landscaping
+  ],
+  projects: [
+    "https://images.unsplash.com/photo-1581141849291-85d4d3aea042?q=80&w=2000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1510137372525-c23c3ff89c80?q=80&w=2000&auto=format&fit=crop"
+  ],
+  construction: [
+    "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?q=80&w=2000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop"
+  ]
 };
 
 // Validation patterns
@@ -201,87 +221,8 @@ export const messageStatusEnum = {
   }
 };
 
-// API routes
-export const API_ROUTES = {
-  AUTH: {
-    LOGIN: "/api/auth/login",
-    REGISTER: "/api/auth/register",
-    LOGOUT: "/api/auth/logout",
-    ME: "/api/auth/me"
-  },
-  USERS: {
-    GET: (id: number) => `/api/users/${id}`,
-    UPDATE: (id: number) => `/api/users/${id}`,
-    TRADESMEN: "/api/tradesmen"
-  },
-  PROFILES: {
-    GET: (id: number) => `/api/profiles/${id}`,
-    UPDATE: (id: number) => `/api/profiles/${id}`,
-    CREATE: "/api/profiles"
-  },
-  PROJECTS: {
-    LIST: "/api/projects",
-    GET: (id: number) => `/api/projects/${id}`,
-    CREATE: "/api/projects",
-    UPDATE: (id: number) => `/api/projects/${id}`,
-    DELETE: (id: number) => `/api/projects/${id}`,
-    FEATURED: "/api/projects/featured",
-    IMAGES: {
-      UPLOAD: (projectId: number) => `/api/projects/${projectId}/images`,
-      DELETE: (imageId: number) => `/api/project-images/${imageId}`,
-      SET_MAIN: (projectId: number, imageId: number) => 
-        `/api/projects/${projectId}/images/${imageId}/main`
-    }
-  },
-  CONTRACTS: {
-    LIST: "/api/contracts",
-    CLIENT: "/api/contracts/client",
-    TRADESMAN: "/api/contracts/tradesman",
-    GET: (id: number) => `/api/contracts/${id}`,
-    CREATE: "/api/contracts",
-    UPDATE: (id: number) => `/api/contracts/${id}`,
-    DELETE: (id: number) => `/api/contracts/${id}`,
-    SIGN: (id: number) => `/api/contracts/${id}/sign`
-  },
-  PAYMENTS: {
-    CREATE_INTENT: "/api/create-payment-intent",
-    PAYMENT_STATUS: (id: number) => `/api/payment-status/${id}`,
-    COMPLETE: "/api/payment-complete",
-    MADE: "/api/payments/made",
-    RECEIVED: "/api/payments/received"
-  },
-  MESSAGES: {
-    LIST: "/api/messages",
-    THREAD: (userId: number) => `/api/messages/${userId}`,
-    CONTACTS: "/api/messages/contacts",
-    UNREAD_COUNT: "/api/messages/unread-count",
-    MARK_READ: (userId: number) => `/api/messages/mark-read/${userId}`
-  },
-  SEARCH: "/api/search"
-};
-
-// Page routes
-export const PAGE_ROUTES = {
-  HOME: "/",
-  DASHBOARD: "/dashboard",
-  PROFILE: "/profile",
-  EDIT_PROFILE: "/edit-profile",
-  CREATE_PROFILE: "/create-profile",
-  PROJECTS: "/projects",
-  CREATE_PROJECT: "/create-project",
-  TRADESMAN: (id: number) => `/tradesman/${id}`,
-  PROJECT: (id: number) => `/project/${id}`,
-  CONTRACTS: "/contracts",
-  CONTRACT: (id: number) => `/contracts/${id}`,
-  CREATE_CONTRACT: "/create-contract",
-  MESSAGES: "/messages",
-  MESSAGE_THREAD: (userId: number) => `/messages/${userId}`,
-  PAYMENTS: "/payments",
-  PAYMENT_STATUS: "/payment-status",
-  SEARCH: "/search",
-  LOGIN: "/login",
-  REGISTER: "/register"
-};
+// Deprecated routes - keeping for backward compatibility
+// Use the API_ROUTES and PAGE_ROUTES declared above instead
 
 // Site configuration
 export const SITE_CONFIG = {
