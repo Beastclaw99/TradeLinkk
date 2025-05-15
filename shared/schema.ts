@@ -3,7 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Enums
-export const userRoleEnum = pgEnum('user_role', ['client', 'tradesman']);
+export const userRoleEnum = pgEnum('user_role', ['client', 'tradesman', 'admin']);
 export const tradeEnum = pgEnum('trade_type', [
   'carpentry', 'electrical', 'plumbing', 'painting', 'roofing', 
   'landscaping', 'masonry', 'flooring', 'hvac', 'general_contractor', 'other'
@@ -12,6 +12,7 @@ export const contractStatusEnum = pgEnum('contract_status', ['draft', 'sent', 's
 export const messageStatusEnum = pgEnum('message_status', ['unread', 'read']);
 export const paymentStatusEnum = pgEnum('payment_status', ['pending', 'processing', 'completed', 'failed']);
 export const milestoneStatusEnum = pgEnum('milestone_status', ['pending', 'completed', 'paid']);
+export const verificationStatusEnum = pgEnum('verification_status', ['pending', 'verified', 'rejected']);
 
 // Users
 export const users = pgTable("users", {
@@ -42,6 +43,10 @@ export const tradesmanProfiles = pgTable("tradesman_profiles", {
   qualifications: text("qualifications"),
   completenessScore: integer("completeness_score").default(0),
   availability: text("availability"),
+  verificationStatus: verificationStatusEnum("verification_status").default('pending'),
+  verificationDate: timestamp("verification_date"),
+  verificationDocuments: text("verification_documents"),
+  verificationNotes: text("verification_notes"),
 });
 
 // Portfolio Projects
