@@ -47,6 +47,9 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
+  ShieldAlert,
+  ShieldQuestion
 } from "lucide-react";
 
 interface ProjectImage {
@@ -244,9 +247,22 @@ const TradesmanProfile = () => {
                     </Avatar>
                     
                     <div className="ml-4 text-white">
-                      <h1 className="font-bold text-2xl">{profile.businessName}</h1>
+                      <h1 className="font-bold text-2xl flex items-center">
+                        {profile.businessName}
+                        {profile.verificationStatus === 'verified' && (
+                          <div className="ml-2 flex items-center" title="Verified Tradesman">
+                            <ShieldCheck className="h-5 w-5 text-green-400" />
+                          </div>
+                        )}
+                      </h1>
                       <div className="flex items-center mt-1">
                         <Badge className="mr-2 capitalize">{tradeName}</Badge>
+                        {profile.verificationStatus === 'verified' && (
+                          <Badge className="mr-2 bg-green-100 text-green-800 border-green-200">Verified</Badge>
+                        )}
+                        {profile.verificationStatus === 'pending' && (
+                          <Badge className="mr-2 bg-yellow-100 text-yellow-800 border-yellow-200">Verification Pending</Badge>
+                        )}
                         <div className="flex items-center">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
                           <span className="font-medium">{averageRating.toFixed(1)}</span>
@@ -328,6 +344,45 @@ const TradesmanProfile = () => {
                       <p className="text-muted-foreground">{tradesmanUser.bio}</p>
                     </div>
                   )}
+                  
+                  {/* Verification status section */}
+                  <div className="mt-6">
+                    <h3 className="font-medium mb-2">Verification Status</h3>
+                    <div className="flex items-center gap-2 p-3 rounded-md border">
+                      {profile.verificationStatus === 'verified' ? (
+                        <>
+                          <ShieldCheck className="h-6 w-6 text-green-500 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-green-700">Verified Tradesman</p>
+                            <p className="text-sm text-muted-foreground">
+                              This tradesman's credentials have been verified by our team.
+                              {profile.verificationDate && ` Verified on ${new Date(profile.verificationDate).toLocaleDateString()}.`}
+                            </p>
+                          </div>
+                        </>
+                      ) : profile.verificationStatus === 'pending' ? (
+                        <>
+                          <ShieldQuestion className="h-6 w-6 text-yellow-500 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-yellow-700">Verification Pending</p>
+                            <p className="text-sm text-muted-foreground">
+                              This tradesman has submitted documents for verification. Our team is reviewing them.
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldAlert className="h-6 w-6 text-gray-400 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-gray-700">Not Verified</p>
+                            <p className="text-sm text-muted-foreground">
+                              This tradesman has not completed the verification process yet.
+                            </p>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
                   
                   {/* Action buttons */}
                   <div className="flex flex-wrap gap-4 mt-6 pt-6 border-t">
