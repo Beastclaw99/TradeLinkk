@@ -27,6 +27,8 @@ export interface IStorage {
   updateTradesmanProfile(id: number, data: Partial<TradesmanProfile>): Promise<TradesmanProfile>;
   getAllTradesmanProfiles(): Promise<TradesmanProfile[]>;
   searchTradesmanProfiles(query: string, trade?: string): Promise<TradesmanProfile[]>;
+  getVerificationPendingProfiles(): Promise<TradesmanProfile[]>;
+  updateVerificationStatus(id: number, status: 'pending' | 'verified' | 'rejected', notes?: string): Promise<TradesmanProfile>;
   
   // Project operations
   getProject(id: number): Promise<Project | undefined>;
