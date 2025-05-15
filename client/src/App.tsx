@@ -28,6 +28,7 @@ import TradesmanProfile from "@/pages/TradesmanProfile";
 import ProjectListings from "@/pages/ProjectListings";
 import CreateClientProject from "@/pages/CreateClientProject";
 import ProjectDetails from "@/pages/ProjectDetails";
+import AdminVerification from "@/pages/AdminVerification";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function Router() {
@@ -133,6 +134,15 @@ function Router() {
         {() => (
           <ProtectedRoute>
             <CreateClientProject />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Admin Routes */}
+      <Route path="/admin/verification">
+        {() => (
+          <ProtectedRoute>
+            <AdminVerification />
           </ProtectedRoute>
         )}
       </Route>
