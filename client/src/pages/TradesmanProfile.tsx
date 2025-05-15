@@ -81,6 +81,10 @@ interface ProfileData {
     qualifications?: string;
     completenessScore: number;
     availability?: string;
+    verificationStatus: 'pending' | 'verified' | 'rejected';
+    verificationDate?: Date;
+    verificationDocuments?: string;
+    verificationNotes?: string;
   };
   user: {
     id: number;
@@ -349,6 +353,62 @@ const TradesmanProfile = () => {
                             </Link>
                           </Button>
                         )}
+                        
+                        {/* Verification document upload button - only for own profile */}
+                        {user?.id === profile.userId && profile.verificationStatus !== 'verified' && (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline">
+                                <FileText className="mr-2 h-4 w-4" />
+                                Submit Verification Documents
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Submit Verification Documents</DialogTitle>
+                                <DialogDescription>
+                                  Upload your trade license, certifications, or other documents to verify your business.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <form className="space-y-4" onSubmit={(e) => {
+                                e.preventDefault();
+                                const formData = new FormData(e.currentTarget);
+                                
+                                fetch(`/api/verification/documents/${profile.id}`, {
+                                  method: 'POST',
+                                  body: formData,
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                  window.location.reload();
+                                })
+                                .catch(err => {
+                                  console.error("Error uploading documents:", err);
+                                });
+                              }}>
+                                <div className="space-y-2">
+                                  <label className="block text-sm font-medium">
+                                    License Document
+                                    <input 
+                                      type="file" 
+                                      name="documents" 
+                                      accept=".pdf,.jpg,.jpeg,.png"
+                                      className="mt-1 block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/90"
+                                      required
+                                    />
+                                  </label>
+                                  <p className="text-xs text-muted-foreground">
+                                    Upload license, insurance proof, or certifications (PDF, JPG, PNG)
+                                  </p>
+                                </div>
+                                
+                                <Button type="submit" className="w-full">
+                                  Submit for Verification
+                                </Button>
+                              </form>
+                            </DialogContent>
+                          </Dialog>
+                        )}
                       </>
                     ) : (
                       <Button asChild>
@@ -367,6 +427,20 @@ const TradesmanProfile = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Business Information</CardTitle>
+                {profile.verificationStatus && (
+                  <div className="mt-1">
+                    {profile.verificationStatus === 'verified' ? (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
+                        <CheckCircle className="h-3.5 w-3.5" />
+                        Verified Professional
+                      </Badge>
+                    ) : profile.verificationStatus === 'pending' ? (
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                        Verification Pending
+                      </Badge>
+                    ) : null}
+                  </div>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
