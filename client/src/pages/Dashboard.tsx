@@ -139,6 +139,21 @@ const Dashboard = () => {
                           </div>
                           <Progress value={tradesmanProfile.completenessScore} className="h-2" />
                         </div>
+                      ) : user?.role === 'admin' ? (
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-muted-foreground">Account Type</span>
+                            <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">Admin</Badge>
+                          </div>
+                          <div className="mt-4">
+                            <Button asChild variant="outline" size="sm">
+                              <Link href="/admin/verification">
+                                <CheckCircle className="mr-2 h-4 w-4" />
+                                Manage Verifications
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
                       ) : (
                         <div className="space-y-2">
                           <div className="flex justify-between">

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -31,6 +32,7 @@ import {
   Hammer,
   Clock,
   Briefcase,
+  ShieldCheck,
 } from "lucide-react";
 
 import { tradeEnum } from "@/lib/constants";
@@ -38,6 +40,8 @@ import { tradeEnum } from "@/lib/constants";
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTrade, setSelectedTrade] = useState("");
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [activeTab, setActiveTab] = useState("tradesmen");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
   // Debounce search term to prevent too many API calls
@@ -55,6 +59,7 @@ const Search = () => {
   const queryString = new URLSearchParams();
   if (debouncedSearchTerm) queryString.append("q", debouncedSearchTerm);
   if (selectedTrade) queryString.append("trade", selectedTrade);
+  if (verifiedOnly) queryString.append("verified", "true");
 
   // Fetch search results
   const {
@@ -86,44 +91,63 @@ const Search = () => {
 
       <Card className="mb-8">
         <CardContent className="pt-6">
-          <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
-            <div className="relative">
-              <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search by name, business, or skill..."
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-[1fr_auto_auto]">
+              <div className="relative">
+                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search by name, business, or skill..."
+                  className="pl-8"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              
+              <Select
+                value={selectedTrade}
+                onValueChange={setSelectedTrade}
+              >
+                <SelectTrigger className="w-full md:w-[180px]">
+                  <SelectValue placeholder="Select trade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All trades</SelectItem>
+                  {Object.entries(tradeEnum.enumValues).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              <Button
+                type="submit"
+                className="w-full md:w-auto"
+                onClick={() => {
+                  // Trigger a search
+                }}
+              >
+                Search
+              </Button>
             </div>
             
-            <Select
-              value={selectedTrade}
-              onValueChange={setSelectedTrade}
-            >
-              <SelectTrigger className="w-full md:w-[180px]">
-                <SelectValue placeholder="Select trade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All trades</SelectItem>
-                {Object.entries(tradeEnum.enumValues).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Button
-              type="submit"
-              className="w-full md:w-auto"
-              onClick={() => {
-                // Trigger a search
-              }}
-            >
-              Search
-            </Button>
+            {activeTab === "tradesmen" && (
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="verified" 
+                  checked={verifiedOnly} 
+                  onCheckedChange={(checked) => setVerifiedOnly(checked === true)}
+                />
+                <label
+                  htmlFor="verified"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
+                >
+                  <ShieldCheck className="h-4 w-4 mr-1 text-green-600" />
+                  Show only verified tradesmen
+                </label>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
