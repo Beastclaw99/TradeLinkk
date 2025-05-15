@@ -349,7 +349,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.get("/api/tradesman-profiles", async (req, res) => {
     try {
-      const { search, trade } = req.query;
+      const { search, trade, verified } = req.query;
       
       let profiles;
       if (search || trade) {
@@ -359,6 +359,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
       } else {
         profiles = await storage.getAllTradesmanProfiles();
+      }
+      
+      // Filter by verification status if specified
+      if (verified === 'true') {
+        profiles = profiles.filter(profile => profile.verificationStatus === 'verified');
       }
       
       // Enhance profiles with user data, ratings, and a main project image
@@ -601,7 +606,106 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Create a new client project
+  // Verification endpoints - for admin use
+  app.get("/api/verification/pending", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      
+      // Only admins can access this endpoint
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+      }
+      
+      const pendingProfiles = await storage.getVerificationPendingProfiles();
+      
+      // Enhance profiles with user data
+      const enhancedProfiles = await Promise.all(
+        pendingProfiles.map(async (profile) => {
+          const profileUser = await storage.getUser(profile.userId);
+          if (!profileUser) return null;
+          
+          const { password, ...userWithoutPassword } = profileUser;
+          
+          return {
+            profile,
+            user: userWithoutPassword
+          };
+        })
+      );
+      
+      // Filter out null values
+      const filteredProfiles = enhancedProfiles.filter(Boolean);
+      
+      res.json(filteredProfiles);
+      
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching pending verification profiles" });
+    }
+  });
+  
+  app.post("/api/verification/:profileId", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      
+      // Only admins can access this endpoint
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: "Forbidden: Admin access required" });
+      }
+      
+      const profileId = parseInt(req.params.profileId);
+      const { status, notes } = req.body;
+      
+      if (!['pending', 'verified', 'rejected'].includes(status)) {
+        return res.status(400).json({ message: "Invalid verification status" });
+      }
+      
+      const updatedProfile = await storage.updateVerificationStatus(
+        profileId, 
+        status as 'pending' | 'verified' | 'rejected',
+        notes
+      );
+      
+      res.json(updatedProfile);
+      
+    } catch (error) {
+      res.status(500).json({ message: "Error updating verification status" });
+    }
+  });
+  
+  // Document upload for verification
+  app.post("/api/verification/documents/:profileId", requireAuth, upload.array("documents"), async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const profileId = parseInt(req.params.profileId);
+      
+      // Get the profile
+      const profile = await storage.getTradesmanProfile(profileId);
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      
+      // Check if the profile belongs to the user
+      if (profile.userId !== userId) {
+        return res.status(403).json({ message: "Forbidden: Cannot upload documents for another user's profile" });
+      }
+      
+      // In a real implementation, we would process and store the files
+      // For now, just record that documents were uploaded and set to pending
+      const updatedProfile = await storage.updateTradesmanProfile(profileId, { 
+        verificationStatus: 'pending',
+        verificationDocuments: 'Documents uploaded on ' + new Date().toISOString(),
+        verificationNotes: 'Pending review by admin'
+      });
+      
+      res.json(updatedProfile);
+      
+    } catch (error) {
+      res.status(500).json({ message: "Error uploading verification documents" });
+    }
+  });
+
   app.post("/api/client-projects", requireAuth, async (req, res) => {
     try {
       const userId = (req as any).userId;
