@@ -25,6 +25,9 @@ import Search from "@/pages/Search";
 import Register from "@/pages/Register";
 import Login from "@/pages/Login";
 import TradesmanProfile from "@/pages/TradesmanProfile";
+import ProjectListings from "@/pages/ProjectListings";
+import CreateClientProject from "@/pages/CreateClientProject";
+import ProjectDetails from "@/pages/ProjectDetails";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 function Router() {
@@ -119,6 +122,17 @@ function Router() {
         {(params) => (
           <ProtectedRoute>
             <Checkout />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Project Marketplace Routes */}
+      <Route path="/project-listings" component={ProjectListings} />
+      <Route path="/project-details/:id" component={ProjectDetails} />
+      <Route path="/create-client-project">
+        {() => (
+          <ProtectedRoute>
+            <CreateClientProject />
           </ProtectedRoute>
         )}
       </Route>

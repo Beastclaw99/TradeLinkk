@@ -55,8 +55,13 @@ const Navbar = () => {
     ? [
         { href: "/dashboard", label: "Dashboard" },
         { href: "/search", label: "Find Tradesmen" },
+        { href: "/project-listings", label: "Project Marketplace" },
         ...(user?.role === "tradesman" 
           ? [{ href: "/projects", label: "My Projects" }] 
+          : []
+        ),
+        ...(user?.role === "client" 
+          ? [{ href: "/create-client-project", label: "Post a Project" }] 
           : []
         ),
         { href: "/contracts", label: "Contracts" },
@@ -64,6 +69,7 @@ const Navbar = () => {
       ]
     : [
         { href: "/search", label: "Find Tradesmen" },
+        { href: "/project-listings", label: "Project Marketplace" },
         { href: "/register", label: "Register" },
         { href: "/login", label: "Login" },
       ];
