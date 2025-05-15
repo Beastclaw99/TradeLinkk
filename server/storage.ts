@@ -174,7 +174,11 @@ export class MemStorage implements IStorage {
       insuranceInfo: "Insured with HomeGuard",
       qualifications: "Certified Master Carpenter",
       completenessScore: 90,
-      availability: "Weekdays 8am-5pm"
+      availability: "Weekdays 8am-5pm",
+      verificationStatus: 'verified',
+      verificationDate: new Date(new Date().setDate(new Date().getDate() - 30)), // Verified 30 days ago
+      verificationDocuments: null,
+      verificationNotes: "License and insurance verified via phone"
     };
     
     this.tradesmanProfiles.set(tradesmanProfile.id, tradesmanProfile);
@@ -391,7 +395,11 @@ export class MemStorage implements IStorage {
     const tradesmanProfile: TradesmanProfile = {
       ...profile,
       id,
-      completenessScore: this.calculateProfileCompleteness(profile)
+      completenessScore: this.calculateProfileCompleteness(profile),
+      verificationStatus: 'pending',
+      verificationDate: null,
+      verificationDocuments: null,
+      verificationNotes: null
     };
     this.tradesmanProfiles.set(id, tradesmanProfile);
     return tradesmanProfile;
@@ -436,6 +444,29 @@ export class MemStorage implements IStorage {
     }
     
     return results;
+  }
+  
+  async getVerificationPendingProfiles(): Promise<TradesmanProfile[]> {
+    return Array.from(this.tradesmanProfiles.values())
+      .filter(profile => profile.verificationStatus === 'pending');
+  }
+  
+  async updateVerificationStatus(id: number, status: 'pending' | 'verified' | 'rejected', notes?: string): Promise<TradesmanProfile> {
+    const profile = this.tradesmanProfiles.get(id);
+    
+    if (!profile) {
+      throw new Error(`Tradesman profile with id ${id} not found`);
+    }
+    
+    const updatedProfile = { 
+      ...profile, 
+      verificationStatus: status,
+      verificationDate: status !== 'pending' ? new Date() : null,
+      verificationNotes: notes || profile.verificationNotes
+    };
+    
+    this.tradesmanProfiles.set(id, updatedProfile);
+    return updatedProfile;
   }
 
   // Helper method to calculate profile completeness
