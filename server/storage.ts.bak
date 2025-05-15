@@ -128,7 +128,7 @@ export class MemStorage implements IStorage {
 
   // Initialize with some sample data for testing
   private initializeData() {
-    // Create users
+    // Create example users (we'll add these directly to maps)
     const user1: User = {
       id: this.userId++,
       email: "john@example.com",
@@ -137,9 +137,9 @@ export class MemStorage implements IStorage {
       role: 'client',
       fullName: "John Doe",
       phone: "555-123-4567",
-      location: "Port of Spain, Trinidad",
-      bio: "Homeowner looking for quality work for my new property",
-      avatarUrl: "https://randomuser.me/api/portraits/men/22.jpg",
+      location: "New York, NY",
+      bio: "Homeowner looking for quality work",
+      avatarUrl: null,
       stripeCustomerId: null,
       createdAt: new Date()
     };
@@ -152,127 +152,15 @@ export class MemStorage implements IStorage {
       role: 'tradesman',
       fullName: "Jane Smith",
       phone: "555-987-6543",
-      location: "San Fernando, Trinidad",
-      bio: "Professional carpenter with 10 years of experience specializing in custom cabinetry and furniture",
-      avatarUrl: "https://randomuser.me/api/portraits/women/22.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user3: User = {
-      id: this.userId++,
-      email: "michael@example.com",
-      password: "password123",
-      username: "michaelj",
-      role: 'tradesman',
-      fullName: "Michael Johnson",
-      phone: "555-222-3333",
-      location: "Chaguanas, Trinidad",
-      bio: "Master electrician with 15 years experience. Specializing in residential and commercial electrical work.",
-      avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user4: User = {
-      id: this.userId++,
-      email: "sarah@example.com",
-      password: "password123",
-      username: "sarahp",
-      role: 'tradesman',
-      fullName: "Sarah Peterson",
-      phone: "555-444-5555",
-      location: "Arima, Trinidad",
-      bio: "Professional painter with an eye for detail. Interior and exterior painting services.",
-      avatarUrl: "https://randomuser.me/api/portraits/women/28.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user5: User = {
-      id: this.userId++,
-      email: "robert@example.com",
-      password: "password123",
-      username: "robertd",
-      role: 'tradesman',
-      fullName: "Robert Davis",
-      phone: "555-666-7777",
-      location: "San Juan, Trinidad",
-      bio: "Licensed plumber specializing in repairs, installations, and renovations.",
-      avatarUrl: "https://randomuser.me/api/portraits/men/45.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user6: User = {
-      id: this.userId++,
-      email: "jessica@example.com",
-      password: "password123",
-      username: "jessicab",
-      role: 'tradesman',
-      fullName: "Jessica Brown",
-      phone: "555-888-9999",
-      location: "Tunapuna, Trinidad",
-      bio: "Landscape designer with a passion for creating beautiful outdoor spaces.",
-      avatarUrl: "https://randomuser.me/api/portraits/women/41.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user7: User = {
-      id: this.userId++,
-      email: "david@example.com",
-      password: "password123",
-      username: "davidw",
-      role: 'tradesman',
-      fullName: "David Wilson",
-      phone: "555-111-2222",
-      location: "Point Fortin, Trinidad",
-      bio: "Experienced roofer specializing in all types of roofing systems.",
-      avatarUrl: "https://randomuser.me/api/portraits/men/55.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user8: User = {
-      id: this.userId++,
-      email: "lisa@example.com",
-      password: "password123",
-      username: "lisam",
-      role: 'client',
-      fullName: "Lisa Martinez",
-      phone: "555-333-4444",
-      location: "Port of Spain, Trinidad",
-      bio: "Looking for professional help with home improvements.",
-      avatarUrl: "https://randomuser.me/api/portraits/women/63.jpg",
-      stripeCustomerId: null,
-      createdAt: new Date()
-    };
-    
-    const user9: User = {
-      id: this.userId++,
-      email: "admin@example.com",
-      password: "admin123",
-      username: "adminuser",
-      role: 'admin',
-      fullName: "Admin User",
-      phone: "555-999-8888",
-      location: "Port of Spain, Trinidad",
-      bio: "Platform administrator",
-      avatarUrl: "https://randomuser.me/api/portraits/men/75.jpg",
+      location: "Chicago, IL",
+      bio: "Professional carpenter with 10 years of experience",
+      avatarUrl: null,
       stripeCustomerId: null,
       createdAt: new Date()
     };
     
     this.users.set(user1.id, user1);
     this.users.set(user2.id, user2);
-    this.users.set(user3.id, user3);
-    this.users.set(user4.id, user4);
-    this.users.set(user5.id, user5);
-    this.users.set(user6.id, user6);
-    this.users.set(user7.id, user7);
-    this.users.set(user8.id, user8);
-    this.users.set(user9.id, user9);
     
     // Create tradesman profile
     const tradesmanProfile: TradesmanProfile = {
