@@ -587,6 +587,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Client project marketplace APIs
+  
+  // Get client projects (with filters)
+  app.get("/api/client-projects", async (req, res) => {
+    try {
+      // In a real implementation, we would use query params to filter
+      // For now, we'll just return some sample data in the client
+      res.json([]);
+    } catch (error) {
+      console.error("Error fetching client projects:", error);
+      res.status(500).json({ message: "Error fetching client projects" });
+    }
+  });
+  
+  // Create a new client project
+  app.post("/api/client-projects", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      
+      if (!user || user.role !== "client") {
+        return res.status(403).json({ message: "Only clients can post projects" });
+      }
+      
+      // In a real implementation, we would validate and store the project
+      // For now, we'll just return a mock successful response
+      const projectId = Math.floor(Math.random() * 1000) + 200;
+      res.status(201).json({ 
+        id: projectId,
+        message: "Project created successfully",
+        ...req.body
+      });
+    } catch (error) {
+      console.error("Error creating client project:", error);
+      res.status(500).json({ message: "Error creating client project" });
+    }
+  });
+  
+  // Get a specific client project
+  app.get("/api/project-details/:id", async (req, res) => {
+    try {
+      const projectId = parseInt(req.params.id);
+      
+      // In a real implementation, we would fetch the project from the database
+      // For now, we'll handle this in the frontend
+      res.json({});
+    } catch (error) {
+      console.error(`Error fetching project ${req.params.id}:`, error);
+      res.status(500).json({ message: "Error fetching project details" });
+    }
+  });
+  
+  // Apply to a project
+  app.post("/api/projects/:id/apply", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      
+      if (!user || user.role !== "tradesman") {
+        return res.status(403).json({ message: "Only tradesmen can apply to projects" });
+      }
+      
+      const projectId = parseInt(req.params.id);
+      
+      // In a real implementation, we would store the application
+      // For now, we'll just return a mock successful response
+      res.status(201).json({ 
+        id: Math.floor(Math.random() * 1000) + 100,
+        projectId,
+        tradesmanId: userId,
+        applicationData: req.body,
+        status: "pending",
+        createdAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error(`Error applying to project ${req.params.id}:`, error);
+      res.status(500).json({ message: "Error submitting application" });
+    }
+  });
+  
+  // Upload project attachments
+  app.post("/api/project-attachments", requireAuth, upload.array("files"), async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      
+      if (!user || user.role !== "client") {
+        return res.status(403).json({ message: "Only clients can upload project attachments" });
+      }
+      
+      const projectId = parseInt(req.body.projectId);
+      
+      // In a real implementation, we would process and store the files
+      // For now, we'll just return a mock successful response
+      const files = req.files as Express.Multer.File[];
+      
+      if (!files || files.length === 0) {
+        return res.status(400).json({ message: "No files were uploaded" });
+      }
+      
+      const fileData = files.map(file => ({
+        filename: file.filename,
+        originalName: file.originalname,
+        size: file.size,
+        mimeType: file.mimetype,
+        path: file.path
+      }));
+      
+      res.status(201).json({
+        projectId,
+        files: fileData
+      });
+    } catch (error) {
+      console.error("Error uploading project attachments:", error);
+      res.status(500).json({ message: "Error uploading project attachments" });
+    }
+  });
+  
   // Project Image Routes
   app.post("/api/projects/:projectId/images", requireAuth, upload.single("image"), async (req, res) => {
     try {
